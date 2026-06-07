@@ -1,112 +1,869 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Microeconomics Escape Room</title>
-<style>
-:root{--bg:#071021;--card:#101a2e;--card2:#152238;--text:#eef4ff;--muted:#aab8d4;--line:#2b3b58;--blue:#38bdf8;--yellow:#facc15;--green:#4ade80;--red:#fb7185;--purple:#a78bfa}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(circle at top left,#164e63 0,#071021 35%,#020617 100%);color:var(--text);min-height:100vh}.wrap{max-width:1180px;margin:0 auto;padding:22px}.hero,.panel{background:linear-gradient(135deg,rgba(16,26,46,.96),rgba(21,34,56,.9));border:1px solid var(--line);border-radius:24px;box-shadow:0 25px 80px rgba(0,0,0,.35);padding:28px}h1{font-size:clamp(2.3rem,6vw,5rem);line-height:.92;margin:0;letter-spacing:-.06em}.subtitle{color:var(--muted);font-size:1.05rem;line-height:1.6;max-width:850px}.tags{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}.tag{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:#0b1222;border-radius:999px;padding:9px 13px;color:#dbeafe;font-size:.92rem}.grid{display:grid;grid-template-columns:1.6fr 1fr;gap:18px;margin-top:18px}.field{margin:14px 0}label{font-weight:800;display:block;margin-bottom:8px}input{width:100%;border:1px solid var(--line);background:#050a16;color:white;border-radius:14px;padding:15px;font-size:1rem}button{border:0;border-radius:15px;padding:13px 18px;font-weight:900;cursor:pointer;color:#06111f;background:linear-gradient(135deg,#38bdf8,#818cf8);box-shadow:0 10px 24px rgba(56,189,248,.2)}button:hover{transform:translateY(-1px)}.secondary{background:#111827;color:#e5e7eb;border:1px solid var(--line);box-shadow:none}.danger{background:linear-gradient(135deg,#fb7185,#f97316)}.hidden{display:none!important}.gamebar{display:none;grid-template-columns:repeat(5,1fr);gap:10px;margin:0 0 16px}.stat{background:#0b1222;border:1px solid var(--line);border-radius:18px;padding:14px;text-align:center}.stat b{display:block;color:var(--yellow);font-size:1.6rem}.roomgrid{display:grid;grid-template-columns:1fr .95fr;gap:18px}.scenario{color:var(--muted);line-height:1.55}.diagram{background:#e2e8f0;border-radius:18px;padding:10px;margin-top:15px}.diagram svg{width:100%;height:auto;display:block}.options{display:grid;gap:10px;margin-top:16px}.option{background:#0b1222;border:1px solid var(--line);color:#e5e7eb;text-align:left}.option.correct{border-color:var(--green);background:rgba(74,222,128,.18)}.option.wrong{border-color:var(--red);background:rgba(251,113,133,.18)}.feedback{margin-top:14px;border-left:4px solid var(--blue);background:#0b1222;border-radius:12px;padding:14px;color:#dbeafe;line-height:1.5}.leaderRow{display:grid;grid-template-columns:38px 1fr auto;gap:12px;align-items:center;background:#0b1222;border:1px solid var(--line);padding:11px;border-radius:14px;margin:8px 0}.rank{width:32px;height:32px;border-radius:50%;background:#1e293b;display:grid;place-items:center;font-weight:900}.leaderName{font-weight:900}.leaderClass{font-size:.85rem;color:var(--muted)}.leaderScore{font-weight:900;color:var(--yellow)}.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.badge{background:rgba(250,204,21,.12);border:1px solid rgba(250,204,21,.4);color:#fef3c7;border-radius:999px;padding:8px 11px;font-size:.9rem;font-weight:800}.shake{animation:shake .24s}@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-@media(max-width:850px){.grid,.roomgrid,.gamebar{grid-template-columns:1fr}.hero,.panel{padding:20px}}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Microeconomics Escape Room</title>
+  <style>
+    :root {
+      --bg: #08111f;
+      --panel: rgba(15, 23, 42, 0.92);
+      --panel2: rgba(30, 41, 59, 0.92);
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent2: #facc15;
+      --danger: #fb7185;
+      --success: #4ade80;
+      --purple: #c084fc;
+      --border: rgba(148, 163, 184, 0.28);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(250, 204, 21, 0.14), transparent 35%),
+        linear-gradient(135deg, #020617, #0f172a 55%, #111827);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .hero {
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.94), rgba(30, 41, 59, 0.84));
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -80px;
+      width: 240px;
+      height: 240px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.25), transparent 60%);
+      pointer-events: none;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4.5rem);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+    }
+
+    .subtitle {
+      margin: 14px 0 0;
+      color: var(--muted);
+      max-width: 780px;
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    .tagrow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0 0;
+    }
+
+    .tag {
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.7);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.4fr 0.8fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: var(--panel);
+      padding: 20px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+    }
+
+    .card h2, .card h3 { margin-top: 0; }
+
+    label {
+      display: block;
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: rgba(2, 6, 23, 0.8);
+      color: var(--text);
+      padding: 14px 14px;
+      border-radius: 14px;
+      outline: none;
+      font-size: 1rem;
+      margin-bottom: 12px;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.12);
+    }
+
+    button {
+      border: 0;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      color: #020617;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      padding: 13px 16px;
+      border-radius: 14px;
+      cursor: pointer;
+      box-shadow: 0 12px 28px rgba(56, 189, 248, 0.24);
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); filter: brightness(1.05); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .secondary {
+      background: rgba(30, 41, 59, 0.95);
+      color: var(--text);
+      border: 1px solid var(--border);
+      box-shadow: none;
+    }
+
+    .dangerBtn {
+      background: linear-gradient(135deg, #fb7185, #f97316);
+      color: #fff;
+    }
+
+    .successBtn {
+      background: linear-gradient(135deg, #4ade80, #22c55e);
+      color: #052e16;
+    }
+
+    .gamebar {
+      display: none;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .stat {
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.88);
+      border-radius: 16px;
+      padding: 12px;
+      min-height: 70px;
+    }
+
+    .stat small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 5px;
+    }
+
+    .stat strong { font-size: 1.35rem; }
+
+    .roomTitle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .roomTitle h2 { margin: 0; }
+
+    .roomBadge {
+      background: rgba(250, 204, 21, 0.13);
+      color: #fde68a;
+      border: 1px solid rgba(250, 204, 21, 0.35);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .scenario {
+      border-left: 4px solid var(--accent);
+      background: rgba(56, 189, 248, 0.08);
+      padding: 14px 16px;
+      border-radius: 14px;
+      line-height: 1.55;
+      color: #dbeafe;
+      margin: 14px 0;
+    }
+
+    .question {
+      font-size: 1.3rem;
+      font-weight: 900;
+      line-height: 1.35;
+      margin: 18px 0 14px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .option {
+      text-align: left;
+      background: rgba(15, 23, 42, 0.94);
+      color: var(--text);
+      border: 1px solid var(--border);
+      box-shadow: none;
+      min-height: 74px;
+    }
+
+    .option:hover { border-color: var(--accent); }
+
+    .feedback {
+      min-height: 76px;
+      margin-top: 16px;
+      border: 1px solid var(--border);
+      background: rgba(2, 6, 23, 0.55);
+      border-radius: 16px;
+      padding: 14px;
+      line-height: 1.55;
+    }
+
+    .feedback.good { border-color: rgba(74, 222, 128, 0.55); background: rgba(74, 222, 128, 0.09); }
+    .feedback.bad { border-color: rgba(251, 113, 133, 0.55); background: rgba(251, 113, 133, 0.09); }
+    .feedback.hint { border-color: rgba(250, 204, 21, 0.55); background: rgba(250, 204, 21, 0.09); }
+
+    .diagram {
+      margin: 14px 0;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(248, 250, 252, 0.96);
+      color: #0f172a;
+      padding: 12px;
+      overflow-x: auto;
+    }
+
+    svg { max-width: 100%; height: auto; display: block; margin: auto; }
+
+    .leaderboardRows {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 540px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .leaderRow {
+      display: grid;
+      grid-template-columns: 42px 1fr 70px 80px;
+      gap: 8px;
+      align-items: center;
+      background: rgba(2, 6, 23, 0.45);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px;
+    }
+
+    .rank {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(56, 189, 248, 0.13);
+      font-weight: 900;
+      color: #bae6fd;
+    }
+
+    .leaderName { font-weight: 900; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .leaderClass { color: #cbd5e1; font-size: 0.85rem; }
+    .leaderScore { font-weight: 900; color: #fde68a; text-align: right; }
+
+    .badgeShelf {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .achievement {
+      background: rgba(192, 132, 252, 0.12);
+      color: #e9d5ff;
+      border: 1px solid rgba(192, 132, 252, 0.35);
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-size: 0.85rem;
+      font-weight: 800;
+    }
+
+    .hidden { display: none !important; }
+
+    .pulse {
+      animation: pulse 0.7s ease;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      45% { transform: scale(1.025); }
+      100% { transform: scale(1); }
+    }
+
+    @media (max-width: 860px) {
+      .grid { grid-template-columns: 1fr; }
+      .gamebar { grid-template-columns: 1fr 1fr; }
+      .options { grid-template-columns: 1fr; }
+      .leaderRow { grid-template-columns: 38px 1fr 62px; }
+      .leaderScore { grid-column: 3; }
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="hero" id="startPanel">
-    <h1>Microeconomics<br>Escape Room</h1>
-    <p class="subtitle">The Market Failure Reactor is overheating. Escape 8 rooms by solving microeconomics puzzles on efficiency, externalities, public goods, policies and government failure.</p>
-    <div class="tags">
-      <span class="tag">⏱ 20-minute countdown</span><span class="tag">🚨 Wrong answers give hints</span><span class="tag">🏆 Firebase leaderboard</span><span class="tag">🔥 Built for JC1 H2 Economics</span>
-    </div>
-    <div class="grid">
-      <div class="panel">
-        <h2>Enter Mission</h2>
-        <div class="field"><label>Student Name / Nickname</label><input id="playerName" value="Aidan" /></div>
-        <div class="field"><label>Class</label><input id="playerClass" value="26S21" /></div>
-        <button type="button" id="startBtn">Start Mission</button>
-        <p class="subtitle">Score saves to Firestore after completion. Game works even if Firebase is slow.</p>
+  <div class="app">
+    <section class="hero" id="startPanel">
+      <h1>Microeconomics<br>Escape Room</h1>
+      <p class="subtitle">
+        The Market Failure Reactor is overheating. Escape 8 rooms by solving microeconomics puzzles on efficiency,
+        externalities, information failure, public goods, policies, equity and government failure.
+      </p>
+      <div class="tagrow">
+        <span class="tag">⏱ 20-minute countdown</span>
+        <span class="tag">🚨 Wrong answers trigger hints, not dead ends</span>
+        <span class="tag">🏆 Firebase class leaderboard</span>
+        <span class="tag">🔥 Built for JC1 H2 Economics</span>
       </div>
-      <div class="panel">
-        <h2>Live Leaderboard</h2>
-        <div id="firebaseStatus" class="tag">Starting app...</div>
-        <div id="leaderboard"></div>
-      </div>
-    </div>
-  </div>
 
-  <div id="gamebar" class="gamebar">
-    <div class="stat"><small>Player</small><b id="statPlayer">-</b></div>
-    <div class="stat"><small>Time</small><b id="statTime">20:00</b></div>
-    <div class="stat"><small>Score</small><b id="statScore">0</b></div>
-    <div class="stat"><small>Streak</small><b id="statStreak">0🔥</b></div>
-    <div class="stat"><small>Room</small><b id="statRoom">1/8</b></div>
-  </div>
-
-  <div id="gamePanel" class="panel hidden">
-    <div class="roomgrid">
-      <div>
-        <span class="tag" id="roomBadge">Room</span>
-        <h2 id="roomTitle"></h2>
-        <p class="scenario" id="scenario"></p>
-        <div class="diagram" id="diagram"></div>
-      </div>
-      <div>
-        <h2 id="question"></h2>
-        <div id="options" class="options"></div>
-        <div class="feedback" id="feedback">Choose carefully. First-try correct answers earn the highest score.</div>
-        <div class="tags">
-          <button class="secondary" type="button" id="hintBtn">Emergency Hint Terminal</button>
-          <button class="secondary" type="button" id="loadBoardBtn">Refresh Leaderboard</button>
+      <div class="grid">
+        <div class="card">
+          <h2>Enter Mission</h2>
+          <label for="playerName">Student Name / Nickname</label>
+          <input id="playerName" placeholder="e.g. Aidan" maxlength="28" />
+          <label for="playerClass">Class</label>
+          <input id="playerClass" placeholder="e.g. 26S21" maxlength="12" />
+          <button id="startBtn">Start Mission</button>
+          <p class="subtitle" style="font-size:0.9rem;">Your score will be saved to Firestore after you complete the escape room.</p>
         </div>
-        <h3>Badges</h3><div class="badges" id="badgeShelf"></div>
-        <h3>Leaderboard</h3><div id="sideLeaderboard"></div>
+
+        <div class="card">
+          <h2>Live Leaderboard</h2>
+          <div id="firebaseStatus" class="tag" style="display:inline-block;margin-bottom:12px;">Connecting to Firebase...</div>
+          <div id="leaderboard" class="leaderboardRows"></div>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <section class="gamebar" id="gamebar">
+      <div class="stat"><small>Player</small><strong id="statPlayer">-</strong></div>
+      <div class="stat"><small>Room</small><strong id="statRoom">1 / 8</strong></div>
+      <div class="stat"><small>Time</small><strong id="statTime">20:00</strong></div>
+      <div class="stat"><small>Score</small><strong id="statScore">0</strong></div>
+      <div class="stat"><small>Hints</small><strong id="statHints">0</strong></div>
+    </section>
+
+    <section class="grid hidden" id="gamePanel">
+      <div class="card" id="roomCard">
+        <div class="roomTitle">
+          <h2 id="roomName">Room</h2>
+          <span class="roomBadge" id="roomBadge">LOCKED</span>
+        </div>
+        <div class="scenario" id="scenario"></div>
+        <div class="diagram" id="diagramBox"></div>
+        <div class="question" id="question"></div>
+        <div class="options" id="options"></div>
+        <div class="feedback" id="feedback">Choose carefully. The reactor is watching.</div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+          <button class="secondary" id="hintBtn">Emergency Hint Terminal</button>
+          <button class="secondary" id="restartBtn">Restart Mission</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Mission Console</h2>
+        <p class="subtitle" style="font-size:0.95rem;">Wrong answers cost time, but you will never be trapped. After repeated mistakes, the Emergency Economics Handbook unlocks.</p>
+        <div class="badgeShelf" id="badgeShelf"></div>
+        <h3 style="margin-top:20px;">Leaderboard</h3>
+        <div id="sideLeaderboard" class="leaderboardRows"></div>
+      </div>
+    </section>
+
+    <section class="card hidden" id="endPanel" style="margin-top:18px;">
+      <h2 id="endTitle">Mission Complete</h2>
+      <p id="endText" class="subtitle"></p>
+      <div class="tagrow" id="endStats"></div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:16px;">
+        <button id="playAgainBtn">Play Again</button>
+        <button class="secondary" id="loadBoardBtn">Refresh Leaderboard</button>
+      </div>
+    </section>
   </div>
 
-  <div id="endPanel" class="panel hidden">
-    <h1 id="endTitle"></h1>
-    <p class="subtitle" id="endText"></p>
-    <div class="tags" id="endStats"></div>
-    <button type="button" id="playAgainBtn">Play Again</button>
-  </div>
-</div>
-<script>
-// Firebase is loaded dynamically so a Firebase/network problem will NOT jam Start Mission.
-const firebaseConfig={apiKey:"AIzaSyCozFKsYv_8ozXlH7lJihRUvodlCpof1G8",authDomain:"escaperoom-39584.firebaseapp.com",projectId:"escaperoom-39584",storageBucket:"escaperoom-39584.firebasestorage.app",messagingSenderId:"565299730559",appId:"1:565299730559:web:ff12ca05bd0f5c743a874a"};
-let db=null, fb=null, firebaseReady=false;
-const $=id=>document.getElementById(id);
-function setStatus(t){const el=$("firebaseStatus"); if(el) el.textContent=t;}
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      query,
+      orderBy,
+      limit,
+      getDocs,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-const rooms=[
-{name:"Room 1: Allocation Chamber",badge:"Efficiency Lock",scenario:"A free market can allocate resources efficiently only under strict assumptions: rational agents, perfect information, perfect competition, no externalities, factor mobility and no government intervention.",diagram:"market",question:"When is allocative efficiency achieved?",options:["MPB = MPC only","MSB = MSC","MEC = 0 only","Price = 0"],answer:1,h1:"Think about society, not just private consumers and producers.",h2:"The key condition uses marginal social benefit and marginal social cost.",ex:"Allocative efficiency occurs when MSB = MSC. Society's welfare is maximised because the last unit's benefit equals its social cost.",badgeEarned:"Efficiency Analyst"},
-{name:"Room 2: Market Failure Prison",badge:"Invisible Hand Jammed",scenario:"The free market is unable to allocate resources efficiently because real-world assumptions break down.",diagram:"failure",question:"Which option is a source of market failure?",options:["Perfect information","No externalities","Public goods","Perfect factor mobility"],answer:2,h1:"Think about goods that markets may not provide properly.",h2:"Non-rivalry and non-excludability create a free rider problem.",ex:"Public goods are a source of market failure because they are non-rival and non-excludable, causing free-riding and possible non-provision.",badgeEarned:"Market Failure Breaker"},
-{name:"Room 3: Pollution Factory",badge:"MEC Leak",scenario:"A factory produces aluminium and creates air pollution. Nearby residents suffer health costs although they are not involved in the transaction.",diagram:"neg",question:"Which relationship best describes negative externalities in production?",options:["MSC > MPC","MSB > MPB","MSC < MPC","MPB = 0"],answer:0,h1:"The pollution creates third-party costs.",h2:"MEC exists, so MSC = MPC + MEC.",ex:"Negative externalities create marginal external cost. Hence MSC = MPC + MEC, so MSC > MPC. The market over-produces and creates deadweight loss.",badgeEarned:"Pollution Controller"},
-{name:"Room 4: Traffic Control Centre",badge:"ERP Override",scenario:"Driving creates congestion. Other road users experience delays, lower productivity and possible emergency service delays.",diagram:"neg",question:"In a negative externality in consumption, what does the free market tend to do?",options:["Under-consume the good","Over-consume the good","Produce zero output","Always achieve social optimum"],answer:1,h1:"Private consumers ignore third-party costs.",h2:"Market quantity Qp is greater than social quantity Qs.",ex:"Consumers ignore external costs. The market equilibrium is where MPB = MPC, but the social optimum is where MSB = MSC, so there is over-consumption.",badgeEarned:"Traffic Economist"},
-{name:"Room 5: Vaccination Lab",badge:"Herd Immunity Gate",scenario:"Vaccination protects the vaccinated person and also reduces the spread of disease to family, friends, colleagues and society.",diagram:"pos",question:"Which relationship best describes positive externalities in consumption?",options:["MSC > MPC","MSB > MPB","MPC > MSC","MEC > MEB"],answer:1,h1:"Third parties enjoy extra benefits.",h2:"MEB exists, so MSB = MPB + MEB.",ex:"Positive externalities create marginal external benefit. Hence MSB = MPB + MEB, so MSB > MPB. The free market under-consumes the good.",badgeEarned:"Herd Immunity Hero"},
-{name:"Room 6: Public Goods Fortress",badge:"Free Rider Attack",scenario:"National defence protects everyone once provided, and it is difficult to exclude non-payers from benefiting.",diagram:"public",question:"Which two features define a pure public good?",options:["Rival and excludable","Non-rival and non-excludable","Rival and non-excludable","Non-rival and excludable"],answer:1,h1:"One person's consumption does not reduce another person's consumption.",h2:"Non-payers cannot easily be excluded.",ex:"A pure public good is non-rival and non-excludable. This creates a free rider problem, so private firms may not provide it.",badgeEarned:"Free Rider Defender"},
-{name:"Room 7: Policy Control Centre",badge:"Intervention Code",scenario:"The government wants to reduce over-consumption or over-production caused by negative externalities.",diagram:"policy",question:"A tax equal to MEC at the socially optimal output helps because it...",options:["Raises MPC and internalises the external cost","Lowers MSC below zero","Increases over-consumption","Removes all private costs"],answer:0,h1:"The tax makes private decision-makers face the external cost.",h2:"MPC shifts upward towards MSC.",ex:"A per-unit tax equal to MEC at Qs raises MPC to MPC + tax. If set correctly, output falls from Qp to Qs.",badgeEarned:"Policy Maker"},
-{name:"Room 8: Government Failure Reactor",badge:"Final Boss",scenario:"The government intervenes, but it may not have perfect information. Wrong tax size, high enforcement costs, or poor compliance can make outcomes worse than intended.",diagram:"boss",question:"Which is a likely reason for government failure?",options:["Perfect information","Zero enforcement cost","Imperfect information about external costs","No opportunity cost"],answer:2,h1:"Governments may not know the exact MEC or MEB.",h2:"Wrong information can lead to over-correction or under-correction.",ex:"Government failure can occur when the government has imperfect information about the size of external costs or benefits.",badgeEarned:"Market Failure Titan Slayer"}
-];
-const state={name:"",cls:"",room:0,score:0,time:1200,streak:0,attempts:0,hints:0,badges:[],timer:null,done:false};
-function clean(v,f){v=String(v||"").trim().replace(/[<>]/g,"").slice(0,30);return v||f}
-function fmt(s){return `${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`}
-function startGame(){state.name=clean($("playerName").value,"Anonymous");state.cls=clean($("playerClass").value,"NoClass").toUpperCase();state.room=0;state.score=0;state.time=1200;state.streak=0;state.attempts=0;state.hints=0;state.badges=[];state.done=false;$("startPanel").classList.add("hidden");$("endPanel").classList.add("hidden");$("gamePanel").classList.remove("hidden");$("gamebar").style.display="grid";clearInterval(state.timer);state.timer=setInterval(tick,1000);renderRoom();updateStats();}
-function tick(){if(state.done)return;state.time--;if(state.time<=0){state.time=0;finish(false)}updateStats()}
-function updateStats(){$("statPlayer").textContent=`${state.name} (${state.cls})`;$("statTime").textContent=fmt(state.time);$("statScore").textContent=state.score;$("statStreak").textContent=`${state.streak}🔥`;$("statRoom").textContent=`${Math.min(state.room+1,rooms.length)}/${rooms.length}`;}
-function renderRoom(){const r=rooms[state.room];state.attempts=0;$("roomBadge").textContent=`🚪 ${r.badge}`;$("roomTitle").textContent=r.name;$("scenario").textContent=r.scenario;$("question").textContent=r.question;$("diagram").innerHTML=diagram(r.diagram);$("feedback").innerHTML="Choose carefully. Wrong answers cost 20 seconds, but the mission will not jam.";const box=$("options");box.innerHTML="";r.options.forEach((op,i)=>{const b=document.createElement("button");b.type="button";b.className="option";b.textContent=op;b.onclick=()=>choose(i,b);box.appendChild(b)});renderBadges();}
-function choose(i,btn){const r=rooms[state.room];if(i===r.answer){btn.classList.add("correct");const gain=Math.max(80,220-state.attempts*50)+state.streak*25;state.score+=gain;state.streak++;state.badges.push(r.badgeEarned);$("feedback").innerHTML=`✅ Correct. +${gain} points<br><br>${r.ex}`;updateStats();renderBadges();setTimeout(()=>{state.room++; if(state.room>=rooms.length) finish(true); else renderRoom();},1100)}else{btn.classList.add("wrong");state.attempts++;state.streak=0;state.score=Math.max(0,state.score-20);state.time=Math.max(0,state.time-20);document.body.classList.add("shake");setTimeout(()=>document.body.classList.remove("shake"),250);let msg=`🚨 Wrong answer. -20 points, -20 seconds.`; if(state.attempts===1)msg+=`<br><br>Hint: ${r.h1}`; else if(state.attempts===2)msg+=`<br><br>Emergency Hint Terminal: ${r.h2}`; else msg+=`<br><br>Full explanation unlocked: ${r.ex}<br><br>You can still try again.`;$("feedback").innerHTML=msg;updateStats();}}
-function showHint(){const r=rooms[state.room];state.hints++;state.score=Math.max(0,state.score-50);$("feedback").innerHTML=`🆘 Emergency Hint Terminal activated. -50 points.<br><br>${r.h2}`;updateStats()}
-function renderBadges(){const el=$("badgeShelf");el.innerHTML=state.badges.length?state.badges.map(b=>`<span class="badge">🏅 ${esc(b)}</span>`).join(""):`<span class="tag">No badges yet</span>`}
-async function finish(escaped){state.done=true;clearInterval(state.timer);if(escaped)state.score+=500+state.time;updateStats();$("gamePanel").classList.add("hidden");$("gamebar").style.display="none";$("endPanel").classList.remove("hidden");$("endTitle").textContent=escaped?"🎉 Mission Complete":"⏱ Mission Failed";$("endText").textContent=escaped?`${state.name}, you escaped Market Failure Island.`:`${state.name}, try again and use hints strategically.`;$("endStats").innerHTML=`<span class="tag">Score: ${state.score}</span><span class="tag">Class: ${state.cls}</span><span class="tag">Time left: ${fmt(state.time)}</span><span class="tag">Hints used: ${state.hints}</span>`;await saveScore(escaped);await loadLeaderboard();}
-function localRows(){return JSON.parse(localStorage.getItem("escapeLeaderboard")||"[]").sort((a,b)=>b.score-a.score).slice(0,20)}
-async function saveScore(escaped){const rec={name:state.name,class:state.cls,score:state.score,timeLeft:state.time,hintsUsed:state.hints,roomsCleared:escaped?8:state.room,escaped,createdAt:new Date().toISOString()};if(firebaseReady&&db&&fb){try{await fb.addDoc(fb.collection(db,"leaderboard"),{...rec,createdAt:fb.serverTimestamp()});setStatus("Score saved to Firebase ✅");return}catch(e){console.error(e);setStatus("Firebase save failed. Saved locally.")}}const arr=localRows();arr.push(rec);arr.sort((a,b)=>b.score-a.score);localStorage.setItem("escapeLeaderboard",JSON.stringify(arr.slice(0,50)));}
-async function loadLeaderboard(){let rows=[];if(firebaseReady&&db&&fb){try{const q=fb.query(fb.collection(db,"leaderboard"),fb.orderBy("score","desc"),fb.limit(20));const snap=await fb.getDocs(q);snap.forEach(d=>rows.push(d.data()));setStatus("Firebase leaderboard loaded ✅")}catch(e){console.error(e);setStatus("Firebase blocked. Showing local leaderboard.")}}if(!rows.length)rows=localRows();renderLeaderboard(rows,"leaderboard");renderLeaderboard(rows,"sideLeaderboard")}
-function renderLeaderboard(rows,id){const el=$(id);if(!el)return;if(!rows.length){el.innerHTML='<div class="tag">No scores yet. Be the first to escape.</div>';return}el.innerHTML=rows.map((r,i)=>`<div class="leaderRow"><div class="rank">${i+1}</div><div><div class="leaderName">${esc(r.name||"Anonymous")}</div><div class="leaderClass">${esc(r.class||"NoClass")}${r.escaped?" • Escaped":""}</div></div><div class="leaderScore">${Number(r.score||0)}</div></div>`).join("")}
-function esc(s){return String(s).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]))}
-async function initFirebase(){setStatus("Game ready. Connecting Firebase...");renderLeaderboard(localRows(),"leaderboard");try{const appMod=await import("https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js");const fs=await import("https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js");const app=appMod.initializeApp(firebaseConfig);db=fs.getFirestore(app);fb=fs;firebaseReady=true;await loadLeaderboard()}catch(e){console.error("Firebase connection failed",e);setStatus("Game ready. Firebase not connected yet. Local leaderboard active.");renderLeaderboard(localRows(),"leaderboard")}}
-function diagram(t){const c=`<defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L9,3 z" fill="#0f172a"/></marker></defs><line x1="70" y1="260" x2="380" y2="260" stroke="#0f172a" stroke-width="3" marker-end="url(#a)"/><line x1="70" y1="260" x2="70" y2="35" stroke="#0f172a" stroke-width="3" marker-end="url(#a)"/><text x="210" y="292" font-size="14" font-weight="700">Quantity</text><text x="18" y="45" font-size="14" font-weight="700" transform="rotate(-90 18,45)">Costs / Benefits</text>`;if(t==="market")return`<svg viewBox="0 0 420 310">${c}<line x1="95" y1="235" x2="350" y2="65" stroke="#2563eb" stroke-width="4"/><line x1="95" y1="65" x2="350" y2="235" stroke="#dc2626" stroke-width="4"/><circle cx="222" cy="150" r="6" fill="#111827"/><text x="230" y="145" font-size="15" font-weight="800">MSB = MSC</text></svg>`;if(t==="failure")return`<svg viewBox="0 0 420 310">${c}<line x1="95" y1="230" x2="350" y2="70" stroke="#2563eb" stroke-width="4"/><line x1="95" y1="80" x2="350" y2="230" stroke="#dc2626" stroke-width="4"/><path d="M215 82 L250 145 L218 212 L172 172 L178 110 Z" fill="rgba(251,113,133,.25)" stroke="#be123c" stroke-width="2"/><text x="150" y="156" font-size="16" font-weight="900" fill="#be123c">DWL</text></svg>`;if(t==="neg")return`<svg viewBox="0 0 420 310">${c}<line x1="95" y1="230" x2="350" y2="75" stroke="#2563eb" stroke-width="4"/><line x1="95" y1="190" x2="350" y2="35" stroke="#7c3aed" stroke-width="4"/><line x1="95" y1="75" x2="350" y2="230" stroke="#dc2626" stroke-width="4"/><path d="M188 173 L248 136 L248 198 Z" fill="rgba(251,113,133,.28)" stroke="#be123c" stroke-width="2"/><text x="332" y="76" font-size="14" font-weight="900">MPC</text><text x="332" y="36" font-size="14" font-weight="900">MSC</text><text x="252" y="168" font-size="14" font-weight="900" fill="#be123c">DWL</text></svg>`;if(t==="pos")return`<svg viewBox="0 0 420 310">${c}<line x1="95" y1="225" x2="350" y2="75" stroke="#2563eb" stroke-width="4"/><line x1="95" y1="105" x2="350" y2="255" stroke="#dc2626" stroke-width="4"/><line x1="95" y1="65" x2="350" y2="215" stroke="#16a34a" stroke-width="4"/><path d="M190 170 L250 134 L250 198 Z" fill="rgba(34,197,94,.25)" stroke="#15803d" stroke-width="2"/><text x="318" y="255" font-size="14" font-weight="900">MPB</text><text x="318" y="213" font-size="14" font-weight="900">MSB</text></svg>`;if(t==="public")return`<svg viewBox="0 0 420 310"><rect x="50" y="40" width="320" height="210" rx="18" fill="#e0f2fe" stroke="#0369a1" stroke-width="3"/><text x="104" y="100" font-size="22" font-weight="900" fill="#075985">PUBLIC GOOD VAULT</text><text x="118" y="145" font-size="18" font-weight="900" fill="#0f172a">Non-rival</text><text x="118" y="180" font-size="18" font-weight="900" fill="#0f172a">Non-excludable</text><text x="118" y="215" font-size="18" font-weight="900" fill="#be123c">Free rider problem</text></svg>`;if(t==="policy")return`<svg viewBox="0 0 420 310">${c}<line x1="95" y1="230" x2="350" y2="75" stroke="#2563eb" stroke-width="4"/><line x1="95" y1="190" x2="350" y2="35" stroke="#7c3aed" stroke-width="4"/><line x1="95" y1="75" x2="350" y2="230" stroke="#dc2626" stroke-width="4"/><line x1="172" y1="178" x2="172" y2="134" stroke="#f97316" stroke-width="5" marker-end="url(#a)"/><text x="185" y="150" font-size="15" font-weight="900" fill="#c2410c">Tax = MEC</text></svg>`;return`<svg viewBox="0 0 420 310"><rect x="45" y="42" width="330" height="218" rx="18" fill="#fee2e2" stroke="#be123c" stroke-width="3"/><text x="93" y="105" font-size="24" font-weight="900" fill="#991b1b">FINAL BOSS</text><text x="72" y="150" font-size="17" font-weight="900" fill="#0f172a">Imperfect information</text><text x="72" y="183" font-size="17" font-weight="900" fill="#0f172a">Enforcement costs</text><text x="72" y="216" font-size="17" font-weight="900" fill="#0f172a">Unintended consequences</text></svg>`}
-document.addEventListener("DOMContentLoaded",()=>{$("startBtn").onclick=startGame;$("hintBtn").onclick=showHint;$("playAgainBtn").onclick=()=>location.reload();$("loadBoardBtn").onclick=loadLeaderboard;setStatus("Game ready ✅");initFirebase();});
-</script>
+    // YOUR FIREBASE CONFIG IS ALREADY INSERTED HERE
+    const firebaseConfig = {
+      apiKey: "AIzaSyCozFKsYv_8ozXlH7lJihRUvodlCpof1G8",
+      authDomain: "escaperoom-39584.firebaseapp.com",
+      projectId: "escaperoom-39584",
+      storageBucket: "escaperoom-39584.firebasestorage.app",
+      messagingSenderId: "565299730559",
+      appId: "1:565299730559:web:ff12ca05bd0f5c743a874a"
+    };
+
+    let db = null;
+    let firebaseReady = false;
+
+    try {
+      const app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      firebaseReady = true;
+      setStatus("Firebase connected ✅");
+    } catch (err) {
+      console.error("Firebase connection failed", err);
+      setStatus("Firebase not connected. Using local leaderboard.");
+    }
+
+    const rooms = [
+      {
+        name: "Room 1: Allocation Chamber",
+        badge: "Efficiency Lock",
+        scenario: "A free market can allocate resources efficiently only under strict assumptions: rational agents, perfect information, perfect competition, no externalities, factor mobility and no government intervention.",
+        diagram: "market",
+        question: "When is allocative efficiency achieved?",
+        options: ["MPB = MPC only", "MSB = MSC", "MEC = 0 only", "Price = 0"],
+        answer: 1,
+        hint1: "Think about society, not just private consumers and producers.",
+        hint2: "The key condition uses marginal social benefit and marginal social cost.",
+        explanation: "Allocative efficiency occurs when MSB = MSC. At this output, society's welfare is maximised because the value of the last unit equals the social cost of producing or consuming it.",
+        badgeEarned: "Efficiency Analyst"
+      },
+      {
+        name: "Room 2: Market Failure Prison",
+        badge: "Invisible Hand Jammed",
+        scenario: "The free market is unable to allocate resources efficiently because real-world assumptions break down.",
+        diagram: "failure",
+        question: "Which option is a source of market failure?",
+        options: ["Perfect information", "No externalities", "Public goods", "Perfect factor mobility"],
+        answer: 2,
+        hint1: "Think about goods that markets may not provide properly.",
+        hint2: "Non-rivalry and non-excludability create a free rider problem.",
+        explanation: "Public goods are a source of market failure because they are non-rival and non-excludable. This creates a free rider problem and may lead to non-provision by the free market.",
+        badgeEarned: "Market Failure Breaker"
+      },
+      {
+        name: "Room 3: Pollution Factory",
+        badge: "MEC Leak",
+        scenario: "A factory produces aluminium and creates air pollution. Nearby residents suffer health costs although they are not involved in the transaction.",
+        diagram: "negativeProduction",
+        question: "Which relationship best describes negative externalities in production?",
+        options: ["MSC > MPC", "MSB > MPB", "MSC < MPC", "MPB = 0"],
+        answer: 0,
+        hint1: "The pollution creates third-party costs.",
+        hint2: "MEC exists, so MSC = MPC + MEC.",
+        explanation: "Negative externalities in production create marginal external cost. Therefore, MSC = MPC + MEC, so MSC > MPC. The market output exceeds the socially optimal output, causing over-production and deadweight loss.",
+        badgeEarned: "Pollution Controller"
+      },
+      {
+        name: "Room 4: Traffic Control Centre",
+        badge: "ERP Override",
+        scenario: "Driving creates congestion. Other road users experience delays, lower productivity and possible emergency service delays.",
+        diagram: "negativeConsumption",
+        question: "In a negative externality in consumption, what does the free market tend to do?",
+        options: ["Under-consume the good", "Over-consume the good", "Produce zero output", "Always achieve social optimum"],
+        answer: 1,
+        hint1: "Private consumers ignore third-party costs.",
+        hint2: "Market quantity Qp is greater than social quantity Qs.",
+        explanation: "For negative externalities in consumption, consumers ignore external costs. The market equilibrium occurs where MPB = MPC, but the socially optimal level is where MSB = MSC. Since Qp > Qs, there is over-consumption.",
+        badgeEarned: "Traffic Economist"
+      },
+      {
+        name: "Room 5: Vaccination Lab",
+        badge: "Herd Immunity Gate",
+        scenario: "Vaccination protects the vaccinated person and also reduces the spread of disease to family, friends, colleagues and society.",
+        diagram: "positiveConsumption",
+        question: "Which relationship best describes positive externalities in consumption?",
+        options: ["MSC > MPC", "MSB > MPB", "MPC > MSC", "MEC > MEB"],
+        answer: 1,
+        hint1: "Third parties enjoy extra benefits.",
+        hint2: "MEB exists, so MSB = MPB + MEB.",
+        explanation: "Positive externalities in consumption create marginal external benefit. Therefore, MSB = MPB + MEB, so MSB > MPB. The free market under-consumes the good because consumers ignore external benefits.",
+        badgeEarned: "Herd Immunity Hero"
+      },
+      {
+        name: "Room 6: Public Goods Fortress",
+        badge: "Free Rider Attack",
+        scenario: "National defence protects everyone once provided, and it is difficult to exclude non-payers from benefiting.",
+        diagram: "publicGood",
+        question: "Which two features define a pure public good?",
+        options: ["Rival and excludable", "Non-rival and non-excludable", "Rival and non-excludable", "Non-rival and excludable"],
+        answer: 1,
+        hint1: "One person's consumption does not reduce another person's consumption.",
+        hint2: "Non-payers cannot easily be excluded.",
+        explanation: "A pure public good is non-rival and non-excludable. This creates a free rider problem, so private firms may not provide the good even if society values it.",
+        badgeEarned: "Free Rider Defender"
+      },
+      {
+        name: "Room 7: Policy Control Centre",
+        badge: "Intervention Code",
+        scenario: "The government wants to reduce over-consumption or over-production caused by negative externalities.",
+        diagram: "policy",
+        question: "A tax equal to MEC at the socially optimal output helps because it...",
+        options: ["Raises MPC and internalises the external cost", "Lowers MSC below zero", "Increases over-consumption", "Removes all private costs"],
+        answer: 0,
+        hint1: "The tax makes private decision-makers face the external cost.",
+        hint2: "MPC shifts upward towards MSC.",
+        explanation: "A per-unit tax equal to MEC at Qs raises MPC to MPC + tax. If set correctly, producers or consumers internalise the external cost and reduce output from Qp to Qs.",
+        badgeEarned: "Policy Maker"
+      },
+      {
+        name: "Room 8: Government Failure Reactor",
+        badge: "Final Boss",
+        scenario: "The government intervenes, but it may not have perfect information. The wrong tax size, high enforcement costs, or poor compliance can make outcomes worse than intended.",
+        diagram: "boss",
+        question: "Which is a likely reason for government failure?",
+        options: ["Perfect information", "Zero enforcement cost", "Imperfect information about external costs", "No opportunity cost"],
+        answer: 2,
+        hint1: "Governments may not know the exact MEC or MEB.",
+        hint2: "Wrong information can lead to over-correction or under-correction.",
+        explanation: "Government failure can occur when the government has imperfect information about the size of external costs or benefits. If the tax, subsidy, quota or regulation is set wrongly, society may still suffer welfare loss.",
+        badgeEarned: "Market Failure Titan Slayer"
+      }
+    ];
+
+    const state = {
+      playerName: "",
+      playerClass: "",
+      currentRoom: 0,
+      score: 0,
+      timeLeft: 20 * 60,
+      hintsUsed: 0,
+      attempts: 0,
+      timer: null,
+      badges: [],
+      completed: false
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    function setStatus(text) {
+      const el = $("firebaseStatus");
+      if (el) el.textContent = text;
+    }
+
+    function cleanText(value, fallback) {
+      const cleaned = String(value || "").trim().replace(/[<>]/g, "").slice(0, 28);
+      return cleaned || fallback;
+    }
+
+    function startGame() {
+      state.playerName = cleanText($("playerName").value, "Anonymous");
+      state.playerClass = cleanText($("playerClass").value, "NoClass").toUpperCase();
+      state.currentRoom = 0;
+      state.score = 0;
+      state.timeLeft = 20 * 60;
+      state.hintsUsed = 0;
+      state.attempts = 0;
+      state.badges = [];
+      state.completed = false;
+
+      $("startPanel").classList.add("hidden");
+      $("endPanel").classList.add("hidden");
+      $("gamePanel").classList.remove("hidden");
+      $("gamebar").style.display = "grid";
+      $("statPlayer").textContent = `${state.playerName} (${state.playerClass})`;
+
+      clearInterval(state.timer);
+      state.timer = setInterval(tick, 1000);
+      renderRoom();
+      updateStats();
+    }
+
+    function tick() {
+      if (state.completed) return;
+      state.timeLeft--;
+      if (state.timeLeft <= 0) {
+        state.timeLeft = 0;
+        finishGame(false);
+      }
+      updateStats();
+    }
+
+    function updateStats() {
+      $("statRoom").textContent = `${Math.min(state.currentRoom + 1, rooms.length)} / ${rooms.length}`;
+      $("statTime").textContent = formatTime(state.timeLeft);
+      $("statScore").textContent = state.score;
+      $("statHints").textContent = state.hintsUsed;
+    }
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    }
+
+    function renderRoom() {
+      const room = rooms[state.currentRoom];
+      state.attempts = 0;
+      $("roomName").textContent = room.name;
+      $("roomBadge").textContent = room.badge;
+      $("scenario").textContent = room.scenario;
+      $("question").textContent = room.question;
+      $("diagramBox").innerHTML = diagramSvg(room.diagram);
+      $("feedback").className = "feedback";
+      $("feedback").textContent = "Choose carefully. The reactor is watching.";
+      $("options").innerHTML = "";
+
+      room.options.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.className = "option";
+        btn.textContent = option;
+        btn.onclick = () => answerQuestion(index);
+        $("options").appendChild(btn);
+      });
+
+      renderBadges();
+    }
+
+    function answerQuestion(index) {
+      const room = rooms[state.currentRoom];
+      state.attempts++;
+
+      if (index === room.answer) {
+        const bonus = state.attempts === 1 ? 150 : state.attempts === 2 ? 110 : 80;
+        const timeBonus = state.attempts === 1 ? 20 : 0;
+        state.score += bonus;
+        state.timeLeft += timeBonus;
+        if (!state.badges.includes(room.badgeEarned)) state.badges.push(room.badgeEarned);
+
+        $("feedback").className = "feedback good pulse";
+        $("feedback").innerHTML = `✅ <strong>Door unlocked!</strong><br>${room.explanation}<br><br>+${bonus} points ${timeBonus ? `and +${timeBonus}s time bonus` : ""}`;
+        disableOptions();
+        renderBadges();
+        updateStats();
+
+        setTimeout(() => {
+          state.currentRoom++;
+          if (state.currentRoom >= rooms.length) finishGame(true);
+          else renderRoom();
+        }, 2200);
+      } else {
+        state.score = Math.max(0, state.score - 25);
+        state.timeLeft = Math.max(0, state.timeLeft - 20);
+
+        let message = "🚨 Incorrect. -25 points and -20 seconds.";
+        if (state.attempts === 1) message += `<br><br><strong>Hint:</strong> ${room.hint1}`;
+        else if (state.attempts === 2) message += `<br><br><strong>Deeper hint:</strong> ${room.hint2}`;
+        else if (state.attempts >= 3) {
+          state.hintsUsed++;
+          state.score = Math.max(0, state.score - 40);
+          message += `<br><br>🆘 <strong>Emergency Economics Handbook Activated</strong><br>${room.explanation}<br><br>You can still answer and escape. No dead ends.`;
+        }
+
+        $("feedback").className = state.attempts >= 3 ? "feedback hint pulse" : "feedback bad pulse";
+        $("feedback").innerHTML = message;
+        updateStats();
+      }
+    }
+
+    function disableOptions() {
+      document.querySelectorAll(".option").forEach(btn => btn.disabled = true);
+    }
+
+    function showHint() {
+      const room = rooms[state.currentRoom];
+      state.hintsUsed++;
+      state.score = Math.max(0, state.score - 50);
+      $("feedback").className = "feedback hint pulse";
+      $("feedback").innerHTML = `🆘 <strong>Emergency Hint Terminal</strong><br>${room.hint2}<br><br>Cost: -50 points.`;
+      updateStats();
+    }
+
+    function renderBadges() {
+      const shelf = $("badgeShelf");
+      shelf.innerHTML = "";
+      if (state.badges.length === 0) {
+        shelf.innerHTML = `<span class="tag">No badges yet. Unlock rooms to earn titles.</span>`;
+        return;
+      }
+      state.badges.forEach(badge => {
+        const span = document.createElement("span");
+        span.className = "achievement";
+        span.textContent = `🏅 ${badge}`;
+        shelf.appendChild(span);
+      });
+    }
+
+    async function finishGame(escaped) {
+      state.completed = true;
+      clearInterval(state.timer);
+      const finalBonus = escaped ? 500 + state.timeLeft : 0;
+      state.score += finalBonus;
+      updateStats();
+
+      $("gamePanel").classList.add("hidden");
+      $("gamebar").style.display = "none";
+      $("endPanel").classList.remove("hidden");
+      $("endTitle").textContent = escaped ? "🎉 Mission Complete: You Escaped!" : "⏱ Mission Failed: Reactor Timeout";
+      $("endText").textContent = escaped
+        ? `${state.playerName}, you escaped Market Failure Island and saved society from deadweight loss.`
+        : `${state.playerName}, the reactor overheated. Try again and use the hints strategically.`;
+      $("endStats").innerHTML = `
+        <span class="tag">Score: ${state.score}</span>
+        <span class="tag">Class: ${state.playerClass}</span>
+        <span class="tag">Time left: ${formatTime(state.timeLeft)}</span>
+        <span class="tag">Hints used: ${state.hintsUsed}</span>
+        <span class="tag">Badges: ${state.badges.length}</span>
+      `;
+
+      await saveScore({ escaped });
+      await loadLeaderboard();
+    }
+
+    async function saveScore(extra = {}) {
+      const record = {
+        name: state.playerName,
+        class: state.playerClass,
+        score: state.score,
+        timeLeft: state.timeLeft,
+        hintsUsed: state.hintsUsed,
+        roomsCleared: Math.min(state.currentRoom, rooms.length),
+        badges: state.badges,
+        escaped: Boolean(extra.escaped),
+        createdAt: firebaseReady ? serverTimestamp() : new Date().toISOString()
+      };
+
+      if (firebaseReady && db) {
+        try {
+          await addDoc(collection(db, "leaderboard"), record);
+          setStatus("Score saved to Firebase ✅");
+          return;
+        } catch (err) {
+          console.error("Could not save to Firebase", err);
+          setStatus("Firebase save failed. Saved locally instead.");
+        }
+      }
+
+      const local = JSON.parse(localStorage.getItem("escapeLeaderboard") || "[]");
+      local.push(record);
+      local.sort((a, b) => b.score - a.score);
+      localStorage.setItem("escapeLeaderboard", JSON.stringify(local.slice(0, 50)));
+    }
+
+    async function loadLeaderboard() {
+      let rows = [];
+
+      if (firebaseReady && db) {
+        try {
+          const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(20));
+          const snapshot = await getDocs(q);
+          snapshot.forEach(doc => rows.push(doc.data()));
+          setStatus("Firebase leaderboard loaded ✅");
+        } catch (err) {
+          console.error("Could not load Firebase leaderboard", err);
+          setStatus("Firebase leaderboard failed. Showing local leaderboard.");
+        }
+      }
+
+      if (rows.length === 0) {
+        rows = JSON.parse(localStorage.getItem("escapeLeaderboard") || "[]").sort((a, b) => b.score - a.score).slice(0, 20);
+      }
+
+      renderLeaderboard(rows, "leaderboard");
+      renderLeaderboard(rows, "sideLeaderboard");
+    }
+
+    function renderLeaderboard(rows, targetId) {
+      const target = $(targetId);
+      if (!target) return;
+      if (!rows.length) {
+        target.innerHTML = `<div class="tag">No scores yet. Be the first to escape.</div>`;
+        return;
+      }
+
+      target.innerHTML = rows.map((row, i) => `
+        <div class="leaderRow">
+          <div class="rank">${i + 1}</div>
+          <div>
+            <div class="leaderName">${escapeHtml(row.name || "Anonymous")}</div>
+            <div class="leaderClass">${escapeHtml(row.class || "NoClass")}${row.escaped ? " • Escaped" : ""}</div>
+          </div>
+          <div class="leaderScore">${Number(row.score || 0)}</div>
+        </div>
+      `).join("");
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>'"]/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;"
+      }[c]));
+    }
+
+    function diagramSvg(type) {
+      const common = `
+        <defs>
+          <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,6 L9,3 z" fill="#0f172a" />
+          </marker>
+        </defs>
+        <line x1="70" y1="260" x2="380" y2="260" stroke="#0f172a" stroke-width="3" marker-end="url(#arrow)"/>
+        <line x1="70" y1="260" x2="70" y2="35" stroke="#0f172a" stroke-width="3" marker-end="url(#arrow)"/>
+        <text x="210" y="292" font-size="14" font-weight="700">Quantity</text>
+        <text x="12" y="38" font-size="14" font-weight="700" transform="rotate(-90 18,38)">Costs / Benefits</text>
+      `;
+
+      if (type === "market") return `<svg viewBox="0 0 420 310">${common}<line x1="95" y1="235" x2="350" y2="65" stroke="#2563eb" stroke-width="4"/><line x1="95" y1="65" x2="350" y2="235" stroke="#dc2626" stroke-width="4"/><circle cx="222" cy="150" r="6" fill="#111827"/><text x="230" y="145" font-size="15" font-weight="800">MSB = MSC</text><text x="338" y="62" font-size="15" font-weight="800">MSC</text><text x="338" y="238" font-size="15" font-weight="800">MSB</text></svg>`;
+      if (type === "failure") return `<svg viewBox="0 0 420 310">${common}<line x1="95" y1="230" x2="350" y2="70" stroke="#2563eb" stroke-width="4"/><line x1="95" y1="80" x2="350" y2="230" stroke="#dc2626" stroke-width="4"/><path d="M215 82 L250 145 L218 212 L172 172 L178 110 Z" fill="rgba(251,113,133,0.25)" stroke="#be123c" stroke-width="2"/><text x="150" y="156" font-size="16" font-weight="900" fill="#be123c">DWL</text><text x="245" y="113" font-size="13" font-weight="800">Market failure</text></svg>`;
+      if (type === "negativeProduction" || type === "negativeConsumption") return `<svg viewBox="0 0 420 310">${common}<line x1="95" y1="230" x2="350" y2="75" stroke="#2563eb" stroke-width="4"/><line x1="95" y1="190" x2="350" y2="35" stroke="#7c3aed" stroke-width="4"/><line x1="95" y1="75" x2="350" y2="230" stroke="#dc2626" stroke-width="4"/><path d="M190 133 L223 113 L223 153 Z" fill="rgba(251,113,133,0.28)" stroke="#be123c" stroke-width="2"/><circle cx="190" cy="133" r="4.5" fill="#111827"/><line x1="190" y1="133" x2="190" y2="260" stroke="#111827" stroke-width="1.8" stroke-dasharray="6 6" opacity=".75"/><line x1="223" y1="153" x2="223" y2="260" stroke="#111827" stroke-width="1.8" stroke-dasharray="6 6" opacity=".75"/><path d="M285 168 L198 137" stroke="#be123c" stroke-width="3" fill="none" marker-end="url(#arrow)"/><text x="332" y="76" font-size="14" font-weight="900">MPC</text><text x="332" y="36" font-size="14" font-weight="900">MSC</text><text x="303" y="238" font-size="14" font-weight="900">MPB=MSB</text><text x="292" y="173" font-size="14" font-weight="900" fill="#be123c">DWL</text><text x="181" y="279" font-size="13" font-weight="900">Qs</text><text x="214" y="279" font-size="13" font-weight="900">Qp</text><text x="197" y="126" font-size="12" font-weight="900">MSB=MSC</text></svg>`;
+      if (type === "positiveConsumption") return `<svg viewBox="0 0 420 310">${common}<line x1="95" y1="225" x2="350" y2="75" stroke="#2563eb" stroke-width="4"/><line x1="95" y1="105" x2="350" y2="255" stroke="#dc2626" stroke-width="4"/><line x1="95" y1="65" x2="350" y2="215" stroke="#16a34a" stroke-width="4"/><path d="M197 165 L197 125 L231 145 Z" fill="rgba(34,197,94,0.25)" stroke="#15803d" stroke-width="2"/><circle cx="231" cy="145" r="4.5" fill="#111827"/><line x1="197" y1="165" x2="197" y2="260" stroke="#111827" stroke-width="1.8" stroke-dasharray="6 6" opacity=".75"/><line x1="231" y1="145" x2="231" y2="260" stroke="#111827" stroke-width="1.8" stroke-dasharray="6 6" opacity=".75"/><path d="M292 174 L238 149" stroke="#15803d" stroke-width="3" fill="none" marker-end="url(#arrow)"/><text x="302" y="78" font-size="14" font-weight="900">MPC=MSC</text><text x="318" y="255" font-size="14" font-weight="900">MPB</text><text x="318" y="213" font-size="14" font-weight="900">MSB</text><text x="300" y="180" font-size="14" font-weight="900" fill="#15803d">DWL</text><text x="188" y="279" font-size="13" font-weight="900">Qp</text><text x="222" y="279" font-size="13" font-weight="900">Qs</text><text x="238" y="138" font-size="12" font-weight="900">MSB=MSC</text></svg>`;
+      if (type === "publicGood") return `<svg viewBox="0 0 420 310"><rect x="50" y="40" width="320" height="210" rx="18" fill="#e0f2fe" stroke="#0369a1" stroke-width="3"/><text x="104" y="100" font-size="22" font-weight="900" fill="#075985">PUBLIC GOOD VAULT</text><text x="118" y="145" font-size="18" font-weight="900" fill="#0f172a">Non-rival</text><text x="118" y="180" font-size="18" font-weight="900" fill="#0f172a">Non-excludable</text><text x="118" y="215" font-size="18" font-weight="900" fill="#be123c">Free rider problem</text></svg>`;
+      if (type === "policy") return `<svg viewBox="0 0 420 310">${common}<line x1="95" y1="230" x2="350" y2="75" stroke="#2563eb" stroke-width="4"/><line x1="95" y1="190" x2="350" y2="35" stroke="#7c3aed" stroke-width="4"/><line x1="95" y1="75" x2="350" y2="230" stroke="#dc2626" stroke-width="4"/><line x1="172" y1="178" x2="172" y2="134" stroke="#f97316" stroke-width="5" marker-end="url(#arrow)"/><text x="185" y="150" font-size="15" font-weight="900" fill="#c2410c">Tax = MEC at Qs</text><text x="307" y="36" font-size="14" font-weight="900">MPC + Tax</text><text x="307" y="78" font-size="14" font-weight="900">MPC</text></svg>`;
+      return `<svg viewBox="0 0 420 310"><rect x="45" y="42" width="330" height="218" rx="18" fill="#fee2e2" stroke="#be123c" stroke-width="3"/><text x="93" y="105" font-size="24" font-weight="900" fill="#991b1b">FINAL BOSS</text><text x="72" y="150" font-size="17" font-weight="900" fill="#0f172a">Imperfect information</text><text x="72" y="183" font-size="17" font-weight="900" fill="#0f172a">Enforcement costs</text><text x="72" y="216" font-size="17" font-weight="900" fill="#0f172a">Unintended consequences</text></svg>`;
+    }
+
+    $("startBtn").addEventListener("click", startGame);
+    $("restartBtn").addEventListener("click", () => location.reload());
+    $("hintBtn").addEventListener("click", showHint);
+    $("playAgainBtn").addEventListener("click", () => location.reload());
+    $("loadBoardBtn").addEventListener("click", loadLeaderboard);
+
+    loadLeaderboard();
+  </script>
 </body>
 </html>
