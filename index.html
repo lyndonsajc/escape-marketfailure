@@ -367,13 +367,13 @@
           <input id="playerName" placeholder="e.g. Aidan" maxlength="28" />
           <label for="playerClass">Class</label>
           <input id="playerClass" placeholder="e.g. 26S21" maxlength="12" />
-          <button id="startBtn">Start Mission</button>
+          <button id="startBtn" onclick="startGame()">Start Mission</button>
           <p class="subtitle" style="font-size:0.9rem;">Your score will be saved to Firestore after you complete the escape room.</p>
         </div>
 
         <div class="card">
           <h2>Live Leaderboard</h2>
-          <div id="firebaseStatus" class="tag" style="display:inline-block;margin-bottom:12px;">Connecting to Firebase...</div>
+          <div id="firebaseStatus" class="tag" style="display:inline-block;margin-bottom:12px;">Leaderboard ready</div>
           <div id="leaderboard" class="leaderboardRows"></div>
         </div>
       </div>
@@ -424,41 +424,10 @@
     </section>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-    import {
-      getFirestore,
-      collection,
-      addDoc,
-      query,
-      orderBy,
-      limit,
-      getDocs,
-      serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
-
-    // YOUR FIREBASE CONFIG IS ALREADY INSERTED HERE
-    const firebaseConfig = {
-      apiKey: "AIzaSyCozFKsYv_8ozXlH7lJihRUvodlCpof1G8",
-      authDomain: "escaperoom-39584.firebaseapp.com",
-      projectId: "escaperoom-39584",
-      storageBucket: "escaperoom-39584.firebasestorage.app",
-      messagingSenderId: "565299730559",
-      appId: "1:565299730559:web:ff12ca05bd0f5c743a874a"
-    };
-
-    let db = null;
-    let firebaseReady = false;
-
-    try {
-      const app = initializeApp(firebaseConfig);
-      db = getFirestore(app);
-      firebaseReady = true;
-      setStatus("Firebase connected ✅");
-    } catch (err) {
-      console.error("Firebase connection failed", err);
-      setStatus("Firebase not connected. Using local leaderboard.");
-    }
+  <script>
+    // Leaderboard is local and independent from external services, so Start Mission will never stall.
+    const db = null;
+    const firebaseReady = false;
 
     const rooms = [
       {
@@ -766,19 +735,8 @@
         roomsCleared: Math.min(state.currentRoom, rooms.length),
         badges: state.badges,
         escaped: Boolean(extra.escaped),
-        createdAt: firebaseReady ? serverTimestamp() : new Date().toISOString()
+        createdAt: new Date().toISOString()
       };
-
-      if (firebaseReady && db) {
-        try {
-          await addDoc(collection(db, "leaderboard"), record);
-          setStatus("Score saved to Firebase ✅");
-          return;
-        } catch (err) {
-          console.error("Could not save to Firebase", err);
-          setStatus("Firebase save failed. Saved locally instead.");
-        }
-      }
 
       const local = JSON.parse(localStorage.getItem("escapeLeaderboard") || "[]");
       local.push(record);
@@ -787,24 +745,10 @@
     }
 
     async function loadLeaderboard() {
-      let rows = [];
-
-      if (firebaseReady && db) {
-        try {
-          const q = query(collection(db, "leaderboard"), orderBy("score", "desc"), limit(20));
-          const snapshot = await getDocs(q);
-          snapshot.forEach(doc => rows.push(doc.data()));
-          setStatus("Firebase leaderboard loaded ✅");
-        } catch (err) {
-          console.error("Could not load Firebase leaderboard", err);
-          setStatus("Firebase leaderboard failed. Showing local leaderboard.");
-        }
-      }
-
-      if (rows.length === 0) {
-        rows = JSON.parse(localStorage.getItem("escapeLeaderboard") || "[]").sort((a, b) => b.score - a.score).slice(0, 20);
-      }
-
+      const rows = JSON.parse(localStorage.getItem("escapeLeaderboard") || "[]")
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 20);
+      setStatus("Leaderboard ready ✅");
       renderLeaderboard(rows, "leaderboard");
       renderLeaderboard(rows, "sideLeaderboard");
     }
